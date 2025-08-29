@@ -1,10 +1,3 @@
-Perfect ✅ I’ll write you a clean **README.md** for your project with setup instructions, usage, requirements, and your contact info.
-
----
-
-## `README.md`
-
-```markdown
 # SmartReceipt AI
 
 This project is a **SmartReceipt AI** built with **Google Gemini (via LangChain)** and **Streamlit**.  
