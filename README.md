@@ -1,7 +1,14 @@
+Perfect ✅ I’ll write you a clean **README.md** for your project with setup instructions, usage, requirements, and your contact info.
+
+---
+
+## `README.md`
+
+```markdown
 # SmartReceipt AI
 
-**SmartReceipt AI** is a receipt OCR extractor built with **Streamlit** and **Google Gemini (via LangChain)**.
-It allows users to upload receipt images and converts them into a **structured plain-text receipt format**, preserving store info, order details, items, totals, gratuity, and footers.
+This project is a **SmartReceipt AI** built with **Google Gemini (via LangChain)** and **Streamlit**.  
+It allows you to upload a receipt image and converts it into a **structured plain-text receipt format** (store details, order info, items, totals, gratuity, etc.).  
 
 ---
 
@@ -29,14 +36,7 @@ It allows users to upload receipt images and converts them into a **structured p
 
 ---
 
-## Requirements
-
-* Python 3.10 or higher
-* A Google Gemini API key (obtain from [https://aistudio.google.com/](https://aistudio.google.com/))
-
----
-
-## Installation
+## ⚙️ Installation
 
 1. Clone the repository:
 
@@ -91,18 +91,50 @@ http://localhost:8501
 
 ---
 
-## Notes
+## 📋 Example Output
 
-* The system prompt is tuned for **receipts** only.
-* If no receipt is detected, the model will return: `No receipt detected`.
-* Model output is plain text (no JSON/Markdown).
-* Totals are always displayed in uppercase (`TOTAL`).
+```
+===============================
+          GRAND LUX CAFE
+Roosevelt Field
+===============================
+
+Order #: 0480    Table: 101    Party: 3
+Server: STEPHEN R    SvrCk: 4
+Date: 04/25/15   Time: 16:43
+
+-------------------------------
+Items:
+1  Coffee                     2.95
+1  Chicken Parmesan          17.95
+1  Prime Top Sirloin         25.95
+1  The Bacon-Cheese Burger   13.95
+1  Coffee                     2.95
+-------------------------------
+
+Sub Total:                   63.75
+Tax:                          5.50
+TOTAL:                       69.25
+-------------------------------
+
+Gratuity Not Included
+Suggested Gratuity:
+20%                          13.85
+18%                          12.47
+15%                          10.39
+
+Date: 04/25/15   Time: 17:42
+
+It's been a pleasure to serve you.
+Thank you for dining with us
+===============================
+```
 
 ---
 
-## Support
+## 📧 Contact
 
-For issues, questions, or collaboration, contact:
-**[syaeem26s@gmail.com](mailto:syaeem26s@gmail.com)**
+For any questions or contributions, feel free to reach out:
+📩 **[syaeem26s@gmail.com](mailto:syaeem26s@gmail.com)**
 
 ---
