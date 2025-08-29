@@ -29,7 +29,7 @@ receipt-ocr-bot/
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 1. **Clone this repo**  
    ```bash
@@ -77,51 +77,10 @@ Open the local URL (e.g., `http://localhost:8501`) in your browser.
 
 ---
 
-## 📋 Example Output
-
-```
-===============================
-          GRAND LUX CAFE
-Roosevelt Field
-===============================
-
-Order #: 0480    Table: 101    Party: 3
-Server: STEPHEN R    SvrCk: 4
-Date: 04/25/15   Time: 16:43
-
--------------------------------
-Items:
-1  Coffee                     2.95
-1  Chicken Parmesan          17.95
-1  Prime Top Sirloin         25.95
-1  The Bacon-Cheese Burger   13.95
-1  Coffee                     2.95
--------------------------------
-
-Sub Total:                   63.75
-Tax:                          5.50
-TOTAL:                       69.25
--------------------------------
-
-Gratuity Not Included
-Suggested Gratuity:
-20%                          13.85
-18%                          12.47
-15%                          10.39
-
-Date: 04/25/15   Time: 17:42
-
-It's been a pleasure to serve you.
-Thank you for dining with us
-===============================
-```
-
----
-
-## 📧 Contact
+## Contact
 
 For any questions or contributions, feel free to reach out:
-📩 **[syaeem26s@gmail.com](mailto:syaeem26s@gmail.com)**
+**[syaeem26s@gmail.com](mailto:syaeem26s@gmail.com)**
 
 ---
 
