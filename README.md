@@ -1,7 +1,10 @@
+## `README.md`
+
+```markdown
 # SmartReceipt AI
 
-This project is a **SmartReceipt AI** built with **Google Gemini (via LangChain)** and **Streamlit**.  
-It allows you to upload a receipt image and converts it into a **structured plain-text receipt format** (store details, order info, items, totals, gratuity, etc.).  
+**SmartReceipt AI** is an AI-powered receipt OCR extractor built with **Google Gemini (via LangChain)** and **Streamlit**.  
+It allows you to upload receipt images and converts them into a **structured plain-text receipt format**, keeping items, totals, and other details neatly organized.  
 
 ---
 
@@ -83,4 +86,3 @@ For any questions or contributions, feel free to reach out:
 **[syaeem26s@gmail.com](mailto:syaeem26s@gmail.com)**
 
 ---
-
