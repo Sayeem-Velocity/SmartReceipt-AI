@@ -21,17 +21,29 @@ llm = ChatGoogleGenerativeAI(
 # Groq client for Whisper
 groq_client = Groq(api_key=GROQ_API_KEY)
 
-# System prompt for OCR
+# System prompt with strict splitting rules
 system_prompt = """
 You are a strict OCR analyst specialized in receipts.
 
-- Extract ALL text from the uploaded receipt image or provided transcription and represent the text like the receipt.
+- Extract ALL text from the uploaded receipt image or provided transcription and represent the text exactly like the receipt (keep spacing/alignment).
 - Do not remove or skip fields that exist on the receipt.
-- Organize it into a structured plain-text receipt format.
 - Keep spacing aligned, totals right-justified.
-- If sections are missing, omit them.
 - TOTAL must always be uppercase.
-- If no receipt detected, reply: No receipt detected
+- If no receipt detected, reply: No receipt detected.
+
+--- SPLIT BILL INSTRUCTION ---
+If the user requests to split the bill (e.g., "split among 4", "divide bill in four", "split for five people", "guest 3", "3 persons", "two friends", etc.):
+1. Accept both digits (1, 2, 3, 4, etc.) and words ("one", "two", "three", "four", etc.).
+2. Extract the TOTAL from the receipt.
+3. Divide TOTAL by the requested number of persons.
+4. At the END of the receipt output, strictly append in this format:
+
+---
+Split Bill (N persons): X.XX each
+---
+
+Where N is the number of persons and X.XX is the per-person share.
+If no split is requested, do not add anything.
 """
 
 def extract_receipt_text(uploaded_file):
