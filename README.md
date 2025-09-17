@@ -1,18 +1,27 @@
 # SmartReceipt AI
 
-**SmartReceipt AI** is a receipt OCR extractor built with **Streamlit** and **Google Gemini (via LangChain)**.
-It allows users to upload receipt images and converts them into a **structured plain-text receipt format**, preserving store info, order details, items, totals, gratuity, and footers.
+**SmartReceipt AI** is a multimodal receipt OCR extractor built with **Streamlit**, **Google Gemini (via LangChain)**, and **Groq Whisper** for audio transcription.
+It allows users to upload receipt images or provide speech input and converts them into a **structured plain-text receipt format**, preserving store info, order details, items, totals, gratuity, footers, and optionally splitting bills among guests.
 
 ---
 
 ## Features
 
-* Upload a receipt image (`.jpg`, `.jpeg`, `.png`)
-* Extract **all visible text** using Google Gemini multimodal model
-* Convert unstructured OCR into a **receipt-style structured layout**
-* Preserve store details, order info, items, totals, gratuity, and footer messages
-* Chat-like interface with conversation history
-* Export extracted receipts to `.txt` files for easy use
+* Upload receipt images (`.jpg`, `.jpeg`, `.png`) or provide voice input for instructions.
+* Transcribe speech into English using **Groq Whisper**.
+* Extract **all visible text** from receipts using **Google Gemini multimodal model**.
+* Convert unstructured OCR into a **receipt-style structured layout**.
+* Preserve:
+
+  * Store details
+  * Order information (order #, table, party size, server, date/time)
+  * Items with quantity and price
+  * Subtotals, tax, TOTAL
+  * Extra sections (gratuity, discounts, payment method)
+  * Footer messages (e.g., “Thank you”, “Visit again”)
+* **Split the bill** automatically when requested, supporting both numeric and word formats (`4`, `four`, `five persons`, `guest 3`, etc.).
+* Chat-like interface with conversation memory and continuous input.
+* Export extracted receipts to `.txt` files for easy use.
 
 ---
 
@@ -20,11 +29,11 @@ It allows users to upload receipt images and converts them into a **structured p
 
 ```
 .
-├── app.py            # Streamlit UI (upload, display, export)
-├── ocr_utils.py      # Gemini OCR + formatting logic
+├── app.py            # Streamlit UI: upload, audio input, display, export
+├── ocr_utils.py      # Gemini OCR + Groq Whisper transcription + split bill logic
 ├── requirements.txt  # Python dependencies
-├── .env              # Environment variables (API key)
-└── README.md         # Documentation
+├── .env              # Environment variables (API keys)
+└── README.md         # Project documentation
 ```
 
 ---
@@ -32,7 +41,8 @@ It allows users to upload receipt images and converts them into a **structured p
 ## Requirements
 
 * Python 3.10 or higher
-* A Google Gemini API key (obtain from [https://aistudio.google.com/](https://aistudio.google.com/))
+* Google Gemini API key (obtain from [https://aistudio.google.com/](https://aistudio.google.com/))
+* Groq API key (for Whisper transcription)
 
 ---
 
@@ -59,10 +69,11 @@ It allows users to upload receipt images and converts them into a **structured p
    pip install -r requirements.txt
    ```
 
-4. Create a `.env` file in the project root and add your Gemini API key:
+4. Create a `.env` file in the project root and add your API keys:
 
    ```
    GOOGLE_API_KEY=your_google_gemini_api_key_here
+   GROQ_API_KEY=your_groq_api_key_here
    ```
 
 ---
@@ -85,18 +96,43 @@ http://localhost:8501
 
 ## Usage
 
-1. Upload a receipt image (JPG or PNG).
-2. The extracted **structured text receipt** will appear in the output area.
-3. Use the **Download as TXT** button to export the result.
+1. **Text or Voice Input**:
+
+   * Type instructions or speech (e.g., “Split the bill among 4”).
+   * Optionally, record speech using the mini recorder — the app will transcribe to English automatically.
+2. **Upload Receipt**:
+
+   * Upload a receipt image (`.jpg`, `.jpeg`, `.png`).
+3. **Process OCR**:
+
+   * Click **Analyze Receipt**.
+   * The app extracts all receipt details and formats them in a structured plain-text layout.
+4. **Split Bill (Optional)**:
+
+   * If the user requested a split in text/speech, the output automatically shows per-person amounts at the end of the receipt.
+5. **Download Result**:
+
+   * Use the **Download as TXT** button to export the structured receipt.
 
 ---
 
 ## Notes
 
-* The system prompt is tuned for **receipts** only.
+* The system prompt is strictly tuned for **receipts only**.
+* TOTAL amounts are always displayed in uppercase.
+* Bill splitting supports **both numbers and words** (`4`, `four`, `three people`, `guest 2` etc.).
+* Model output is **plain text**; no JSON or Markdown.
 * If no receipt is detected, the model will return: `No receipt detected`.
-* Model output is plain text (no JSON/Markdown).
-* Totals are always displayed in uppercase (`TOTAL`).
+
+---
+
+## Production Workflow
+
+1. **Audio Input (Optional)** → Transcribed by **Groq Whisper** → Text prompt.
+2. **Receipt Image Upload** → OCR by **Google Gemini** → Raw text.
+3. **Structured Formatting** → Apply receipt layout rules and alignment.
+4. **Split Bill Logic** → Handled automatically by the system prompt when requested.
+5. **Display & Export** → Streamlit shows structured receipt + download option.
 
 ---
 
@@ -107,3 +143,9 @@ For issues, questions, or collaboration, contact:
 
 ---
 
+If you want, I can also **update your `app.py` in a fully production-ready style** with:
+
+* Clean UI
+* Mini voice recorder + text input combined
+* Auto split bill handled via system prompt
+* Continuous session state for chat-like experience
