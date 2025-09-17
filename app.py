@@ -50,7 +50,7 @@ if uploaded_file:
     st.image(image, caption="Uploaded Receipt", width=400)
 
 # ---------------- Run OCR ----------------
-if st.button("Run OCR"):
+if st.button("Analyze Receipt"):
     if st.session_state.user_text.strip() and st.session_state.uploaded_image:
         with st.spinner("Processing..."):
             ocr_text = extract_receipt_text(st.session_state.uploaded_image)
