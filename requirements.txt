@@ -1,6 +1,21 @@
+# --- Core Streamlit app ---
 streamlit
-python-dotenv
 pillow
+python-dotenv
+
+# --- LangChain + Gemini ---
 langchain
 langchain-google-genai
 google-generativeai
+
+# --- Groq Whisper API ---
+groq
+
+# --- Audio Recording (choose ONE) ---
+# For st_audiorec (GitHub install)
+#git+https://github.com/stefanrmmr/streamlit_audio_recorder
+# OR
+streamlit-mic-recorder
+
+# --- Helpers ---
+tqdm

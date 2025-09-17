@@ -1,14 +1,16 @@
 import base64
+import os
+from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage, SystemMessage
-from dotenv import load_dotenv
-import os
+from groq import Groq
 
-# Load API key from .env
+# Load API keys
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Initialize Gemini LLM via LangChain
+# Initialize Gemini LLM
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-pro",
     temperature=0,
@@ -16,47 +18,18 @@ llm = ChatGoogleGenerativeAI(
     google_api_key=GOOGLE_API_KEY
 )
 
-# Strict but flexible system prompt
+# Groq client for Whisper
+groq_client = Groq(api_key=GROQ_API_KEY)
+
+# System prompt for OCR
 system_prompt = """
 You are a strict OCR analyst specialized in receipts.
 
-- Extract ALL text from the uploaded receipt image.
+- Extract ALL text from the uploaded receipt image or provided transcription and represent the text like the receipt.
+- Do not remove or skip fields that exist on the receipt.
 - Organize it into a structured plain-text receipt format.
-- Follow this general structure, but include extra sections if they exist in the receipt:
-
-===============================
-          {STORE NAME}
-{STORE ADDRESS or LOCATION}
-{PHONE (if present)}
-===============================
-
-{ORDER INFO: Order #, Table, Party size, Server, Time, Date}
-
--------------------------------
-Items:
-{QTY}  {ITEM NAME}              {PRICE}
-...
--------------------------------
-
-{ANY SUBTOTALS (if present)}
-
-Subtotal:                       {SUBTOTAL}
-Tax:                            {TAX}
-TOTAL:                          {TOTAL}
--------------------------------
-
-{EXTRA SECTIONS: e.g., Gratuity, Discounts, Payment method}
-
-{DATE & TIME again if present}
-
-{FOOTER MESSAGES like "Thank you", "Visit again", etc.}
-===============================
-
-Rules:
-- Keep spacing aligned so amounts are right-justified.
-- Do not remove or skip fields that exist on the receipt (like gratuity suggestions).
-- If a section is missing in the receipt, simply omit it.
-- Do not use Markdown, JSON, or explanations — only the plain structured receipt text.
+- Keep spacing aligned, totals right-justified.
+- If sections are missing, omit them.
 - TOTAL must always be uppercase.
 - If no receipt detected, reply: No receipt detected
 """
@@ -73,6 +46,32 @@ def extract_receipt_text(uploaded_file):
             {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_base64}"}}
         ])
     ]
-
     response = llm.invoke(messages)
     return response.content
+
+def extract_from_text(text_input: str):
+    """Send raw text (from transcription or manual input) to Gemini OCR pipeline."""
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=text_input)
+    ]
+    response = llm.invoke(messages)
+    return response.content
+
+def transcribe_audio(file_path: str) -> str:
+    """Transcribe audio in English using Groq Whisper API."""
+    with open(file_path, "rb") as f:
+        file_bytes = f.read()
+
+    transcription = groq_client.audio.transcriptions.create(
+        file=(file_path, file_bytes),
+        model="whisper-large-v3",
+        response_format="verbose_json",
+        language="en"  # Force transcription output in English
+    )
+
+    if hasattr(transcription, "text"):
+        return transcription.text
+    elif isinstance(transcription, dict):
+        return transcription.get("text") or transcription.get("transcription") or ""
+    return str(transcription)
